@@ -1,18 +1,12 @@
 
 import asyncio
-from src.llm.model_params import MODEL_URL, MODEL_NAME, MODEL_TEMP, SYSTEM_PROMPT_WITH_TOOLS, SYSTEM_PROMPT_DEFAULT
+from src.llm.model_params import MODEL_URL, MODEL_NAME, MODEL_TEMP
 from src.agent.graph import AgentGraph
-from langchain_ollama import ChatOllama
-from agent import create_custom_react_agent
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langchain_core.messages import SystemMessage, HumanMessage
 
-#import nest_asyncio
-#nest_asyncio.apply()
-
-model = ChatOllama(base_url=MODEL_URL, model=MODEL_NAME, temperature=MODEL_TEMP)
 TOOL_ONLY_TASKS = {"multiply_numbers", "subtract_numbers"}
 
 
@@ -30,10 +24,7 @@ async def main():
 
             strict_tools = [tool for tool in all_tools if tool.name in TOOL_ONLY_TASKS]
 
-            
-            agent = create_custom_react_agent(model, strict_tools)
-
-            #agent = AgentGraph(tools=strict_tools)
+            agent = AgentGraph(tools=strict_tools)
 
             if strict_tools:
                 tool_descriptions = "\n".join(
